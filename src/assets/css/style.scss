@@ -1,0 +1,9 @@
+@use "./base/reset";
+@use "./base/variables";
+@use "./base/functions";
+@use "./base/mixins";
+@use "./base/base";
+
+@use "./pages/**/*";
+
+@use "./parts/**/*";

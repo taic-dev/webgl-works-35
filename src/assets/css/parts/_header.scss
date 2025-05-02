@@ -1,0 +1,26 @@
+@use "../base/variables" as *;
+@use "../base/functions" as *;
+@use "../base/mixins" as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: rem(50);
+  margin-right: rem(50);
+  height: rem(90);
+}
+
+.header__logo {
+  font-weight: 600;
+}
+
+.header__list {
+  display: flex;
+  gap: rem(50);
+}

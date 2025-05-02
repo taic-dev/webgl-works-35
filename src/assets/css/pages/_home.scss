@@ -1,0 +1,56 @@
+@use "../base/variables" as *;
+@use "../base/functions" as *;
+@use "../base/mixins" as *;
+
+.mv {
+  display: flex;
+  align-items: center;
+  gap: rem(80);
+  padding: rem(80);
+  width: 100%;
+}
+
+.mv__desc {
+  width: 50%;
+}
+
+.mv__title {
+  font-size: rem(72);
+}
+
+.mv__text {
+  display: flex;
+  flex-direction: column;
+  gap: rem(24);
+  margin-top: rem(40);
+  font-size: rem(24);
+}
+
+.mv__text span {
+  display: block;
+}
+
+.mv__slider {
+  width: 50%;
+}
+
+.mv__image {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(16);
+  margin-top: rem(80);
+}
+
+.item {
+  width: calc(50% - rem(8));
+  aspect-ratio: 3 / 2;
+  opacity: 0;
+}

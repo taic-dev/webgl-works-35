@@ -1,0 +1,10 @@
+@use "../base/variables" as *;
+@use "../base/functions" as *;
+@use "../base/mixins" as *;
+
+.footer {
+  padding-top: rem(100);
+  padding-bottom: rem(100);
+  padding-left: rem(50);
+  padding-right: rem(50);
+}
