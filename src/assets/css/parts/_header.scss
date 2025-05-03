@@ -2,25 +2,33 @@
 @use "../base/functions" as *;
 @use "../base/mixins" as *;
 
-.header {
+header {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-left: rem(50);
-  margin-right: rem(50);
-  height: rem(90);
+  z-index: 999;
+  padding: 8px;
+  mix-blend-mode: difference;
+  color: $color-white;
 }
-
-.header__logo {
-  font-weight: 600;
+.header__title {
+  position: relative;
+  font-size: 32px;
+  margin-top: 28px;
 }
-
+.header__title__number {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  font-size: 16px;
+  font-weight: normal;
+}
 .header__list {
   display: flex;
-  gap: rem(50);
+  gap: 16px;
+  margin-top: 8px;
+}
+.header__link {
+  font-size: 16px;
+  text-decoration: underline;
 }

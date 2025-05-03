@@ -1,21 +1,17 @@
-import { Mesh } from "./Mesh";
-import { MvMesh } from "./MvMesh";
+import { Particle } from "./Particle";
 import { Setup } from "./Setup";
 
 export class App {
   setup: Setup
-  mesh: Mesh
-  mvMesh: MvMesh
+  particle: Particle
 
   constructor() {
     this.setup = new Setup();
-    this.mesh = new Mesh(this.setup);
-    this.mvMesh = new MvMesh(this.setup);
+    this.particle = new Particle(this.setup);
   }
 
   init() {
-    this.mvMesh.init();
-    this.mesh.init();
+    this.particle.init();
   }
 
   render() {
@@ -24,13 +20,11 @@ export class App {
   }
 
   update() {
-    this.mesh.updateMesh();
-    this.mvMesh.updateMesh();
+    this.particle.updateMesh();
   }
 
   resize() {
     this.setup.resize();
-    this.mesh.resize();
-    this.mvMesh.resize();
+    this.particle.resize();
   }
 }

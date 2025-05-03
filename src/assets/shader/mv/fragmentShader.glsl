@@ -1,5 +1,3 @@
-uniform vec2 uResolution;
-uniform vec2 uMouse;
 uniform float uTime;
 uniform vec2 uPlaneSize;
 uniform sampler2D uTexture;
