@@ -30,8 +30,8 @@ export class Particle {
   setParticle() {
     this.geometry = new THREE.BufferGeometry();
 
-    const COLUMNS = 1200;
-    const ROWS = 500;
+    const COLUMNS = 1000;
+    const ROWS = 1000;
 
     const uvs = [];
     const vertices = [];
@@ -68,6 +68,7 @@ export class Particle {
       uPlaneSize: { value: new THREE.Vector2(info.dom.width, info.dom.height)},
       uTexture: { value: this.loader?.load(info.image.src) },
       uTextureSize: { value: new THREE.Vector2(info.image.width, info.image.height) },
+      uSize: { value: 0 },
       ...commonUniforms
     }
   }
@@ -96,6 +97,10 @@ export class Particle {
       this.mesh.scale.y = info.dom.height;
       this.mesh.position.x = info.dom.x;
       this.mesh.position.y = info.dom.y;
+  }
+
+  raf() {
+    (this.mesh!.material as any).uniforms.uTime.value += 1;
   }
 
   resize() {
