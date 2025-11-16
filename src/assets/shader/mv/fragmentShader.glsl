@@ -4,12 +4,7 @@ uniform sampler2D uTexture;
 uniform vec2 uTextureSize;
 
 varying vec2 vUv;
-
-float circle(vec2 uv, float border) {
-  float radius = 0.5;
-  float dist = radius - distance(uv, vec2(0.5));
-  return smoothstep(0.0, border, dist);
-}
+varying vec3 vPosition;
 
 void main() {
   // アスペクトを計算
@@ -30,10 +25,5 @@ void main() {
 
   vec4 texture = texture2D(uTexture, fixedUv);
 
-  float grey = texture.r * 0.21 + texture.g * 0.71 + texture.b * 0.07;
-  
-  // if(texture.r < 0.2 || texture.g < 0.2 || texture.b < 0.2) discard;
-
-  gl_FragColor = vec4(texture.rgb, 1.0);
-  gl_FragColor.a *= circle(gl_PointCoord, 0.1);
+  gl_FragColor = vec4(texture);
 }

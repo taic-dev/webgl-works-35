@@ -1,31 +1,31 @@
-import { Particle } from "./Particle";
+import { Plane } from "./Plane";
 import { Setup } from "./Setup";
 
 export class App {
   setup: Setup
-  particle: Particle
+  plane: Plane
 
   constructor() {
     this.setup = new Setup();
-    this.particle = new Particle(this.setup);
+    this.plane = new Plane(this.setup);
   }
 
   init() {
-    this.particle.init();
+    this.plane.init();
   }
 
   render() {
     if(!this.setup.scene || !this.setup.camera) return
     this.setup.renderer?.render(this.setup.scene, this.setup.camera)
-    this.particle.raf();
+    this.plane.raf();
   }
 
   update() {
-    this.particle.updateMesh();
+    this.plane.updateMesh();
   }
 
   resize() {
     this.setup.resize();
-    this.particle.resize();
+    this.plane.resize();
   }
 }
