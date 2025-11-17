@@ -30,7 +30,7 @@ export class Setup {
     this.setRenderer();
     this.setScene();
     this.setCamera();
-    this.setAmbientLight();
+    // this.setAmbientLight();
     this.setDirectionalLight();
     this.setGui();
     this.setHelper();
@@ -38,7 +38,7 @@ export class Setup {
 
   setRenderer() {
     const element = document.querySelector('.webgl');
-    this.renderer = new THREE.WebGLRenderer({ alpha: true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setSize(PARAMS.WINDOW.W, PARAMS.WINDOW.H);
     element?.appendChild(this.renderer.domElement);
   }
@@ -50,6 +50,7 @@ export class Setup {
 
   setScene() {
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color();
   }
 
   setCamera() {
@@ -75,8 +76,8 @@ export class Setup {
   }
 
   setDirectionalLight() {
-    this.directionalLight = new THREE.DirectionalLight(0xfff0dd, 5);
-    this.directionalLight.position.set(0, 0, 10);
+    this.directionalLight = new THREE.DirectionalLight(0xfff0dd, 3);
+    this.directionalLight.position.set(0, 0, 5);
     this.scene?.add(this.directionalLight);
   }
 
