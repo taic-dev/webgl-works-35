@@ -89,10 +89,12 @@ export class Setup {
   setGui() {
     const gui = new GUI();
     this.guiValue = {
-      color: { r: 0.8314, g: 0.898, b: 1.0 },
+      range: 0,
+      depthMode: false,
       wireframe: false,
     };
-    gui.addColor(this.guiValue, "color")
+    gui.add(this.guiValue, "range", 0, 1, 0.001);
+    gui.add(this.guiValue, "depthMode");
     gui.add(this.guiValue, "wireframe");
   }
 

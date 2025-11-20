@@ -5,10 +5,8 @@ import fragmentShader from "../../shader/mv/fragmentShader.glsl"
 import vertexShader from "../../shader/mv/vertexShader.glsl"
 import { PARAMS } from "./constants";
 import { getImagePositionAndSize, ImagePositionAndSize } from "../utils/getElementSize";
-import mvTexture from "/assets/images/mv5.png";
-import depthTexture from "/assets/images/depth5.png";
-import heightTexture from "/assets/images/heightTexture.png";
-import alphaTexture from "/assets/images/alphaTexture.png";
+import mvTexture from "/assets/images/mv.png";
+import depthTexture from "/assets/images/depth.png";
 import { EASING } from "../utils/constant";
 
 export class Plane {
@@ -44,9 +42,10 @@ export class Plane {
     return {
       uPlaneSize: { value: new THREE.Vector2(info.dom.width, info.dom.height)},
       uColorTexture: { value: this.loader?.load(mvTexture) },
-      uTexture: { value: this.loader?.load(depthTexture) },
+      uDepthTexture: { value: this.loader?.load(depthTexture) },
       uTextureSize: { value: new THREE.Vector2(info.image.width, info.image.height) },
-      uSize: { value: 0 },
+      uRange: { value: this.setup.guiValue.range },
+      uDepthMode: { value: this.setup.guiValue.depthMode },
       ...commonUniforms
     }
   }
@@ -58,6 +57,7 @@ export class Plane {
       uniforms: uniforms,
       fragmentShader: fragmentShader,
       vertexShader: vertexShader,
+      side: THREE.DoubleSide
     })
 
     // const material = new THREE.MeshStandardMaterial({
@@ -111,9 +111,11 @@ export class Plane {
   }
 
   raf() {
-    // const material = (this.mesh!.material as any);
-    // material.displacementScale = 200
-    // material.uniforms.uTime.value += 1;
+    const material = (this.mesh!.material as any);    
+    material.uniforms.uRange.value = this.setup.guiValue.range;
+    material.uniforms.uDepthMode.value = this.setup.guiValue.depthMode;
+    material.wireframe = this.setup.guiValue.wireframe;
+    material.uniforms.uTime.value += 1;
   }
 
   resize() {

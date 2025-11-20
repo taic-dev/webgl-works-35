@@ -1,6 +1,8 @@
 uniform vec2 uPlaneSize;
-uniform sampler2D uTexture;
+uniform sampler2D uDepthTexture;
 uniform vec2 uTextureSize;
+uniform float uRange;
+uniform bool uDepthMode;
 
 varying vec2 vUv;
 varying vec3 vPosition;
@@ -25,11 +27,11 @@ void main() {
     (vUv.y - 0.5) * ratio.y + 0.5
   );
 
-  vec4 texture = texture2D(uTexture, fixedUv);
+  vec4 texture = texture2D(uDepthTexture, fixedUv);
 
   float brightness = dot(texture.rgb, vec3(0.299, 0.587, 0.114));
 
-  float height = brightness * 500.;
+  float height = brightness * 350.;
 
   float maskX = step(0.015, fixedUv.x) * step(fixedUv.x, 0.98);
   float maskY = step(0.005, fixedUv.y) * step(fixedUv.y, 0.99);
@@ -38,5 +40,13 @@ void main() {
   height *= mask;
 
   vec3 pos = position + vec3(0.0, 0.0, height);
+
+  float over = step(uRange, fixedUv.x);
+  pos.z *= (1.0 - over);
+
+  if(uDepthMode) {
+    pos.z *= (over - 1.0);
+  }
+
   gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
