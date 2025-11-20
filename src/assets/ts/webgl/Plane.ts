@@ -5,9 +5,9 @@ import fragmentShader from "../../shader/mv/fragmentShader.glsl"
 import vertexShader from "../../shader/mv/vertexShader.glsl"
 import { PARAMS } from "./constants";
 import { getImagePositionAndSize, ImagePositionAndSize } from "../utils/getElementSize";
-import mvTexture from "/assets/images/mv.png";
+import mvTexture from "/assets/images/mv5.png";
+import depthTexture from "/assets/images/depth5.png";
 import heightTexture from "/assets/images/heightTexture.png";
-import depthTexture from "/assets/images/depth.png";
 import alphaTexture from "/assets/images/alphaTexture.png";
 import { EASING } from "../utils/constant";
 
@@ -31,7 +31,7 @@ export class Plane {
     const info = getImagePositionAndSize(this.element);
     this.setMesh(info);
 
-    this.click();
+    // this.click();
   }
 
   setUniforms(info: ImagePositionAndSize) {
@@ -43,7 +43,8 @@ export class Plane {
 
     return {
       uPlaneSize: { value: new THREE.Vector2(info.dom.width, info.dom.height)},
-      uTexture: { value: this.loader?.load(info.image.src) },
+      uColorTexture: { value: this.loader?.load(mvTexture) },
+      uTexture: { value: this.loader?.load(depthTexture) },
       uTextureSize: { value: new THREE.Vector2(info.image.width, info.image.height) },
       uSize: { value: 0 },
       ...commonUniforms
@@ -52,22 +53,22 @@ export class Plane {
 
   setMesh(info: ImagePositionAndSize) {
     const uniforms = this.setUniforms(info);
-    const geometry = new THREE.PlaneGeometry(1, 1, 1000, 1000)
-    // const material = new THREE.ShaderMaterial({
-    //   uniforms: uniforms,
-    //   fragmentShader: fragmentShader,
-    //   vertexShader: vertexShader,
-    // })
-
-    const material = new THREE.MeshStandardMaterial({
-      map: this.loader?.load(mvTexture),
-      displacementMap: this.loader?.load(depthTexture),
-      displacementScale: 0,
-      // alphaMap: this.loader?.load(alphaTexture),
-      transparent: true,
-      // depthTest: false,
-      // wireframe: true
+    const geometry = new THREE.PlaneGeometry(1, 1, 100, 100)
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      fragmentShader: fragmentShader,
+      vertexShader: vertexShader,
     })
+
+    // const material = new THREE.MeshStandardMaterial({
+    //   map: this.loader?.load(mvTexture),
+    //   displacementMap: this.loader?.load(depthTexture),
+    //   displacementScale: 0,
+    //   // alphaMap: this.loader?.load(alphaTexture),
+    //   transparent: true,
+    //   // depthTest: false,
+    //   // wireframe: true
+    // })
     this.mesh = new THREE.Mesh(geometry, material);
     this.setup.scene?.add(this.mesh);
 
@@ -95,9 +96,16 @@ export class Plane {
         displacementScale: isAnim ? 300 : 0,
         ease: EASING.OUT_BACK,
         onComplete: () => {
-          isAnim = !isAnim;
-        }
+          gsap.to(this.mesh!.position, {
+          duration: 0.4,
+          z: isAnim ? -300 : 0,
+          ease: EASING.OUT_BACK,
+          onComplete: () => {
+            isAnim = !isAnim;
+          }
       })
+        }
+      })      
       // material.displacementScale = 200
     })
   }

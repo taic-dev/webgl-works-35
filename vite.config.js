@@ -7,7 +7,7 @@ import sassGlobImports from "vite-plugin-sass-glob-import";
 
 export default defineConfig({
   root: "src",
-  base: "./",
+  base: "/webgl-works-35/",
   publicDir: resolve(__dirname, "public"),
   plugins: [
     sassGlobImports(),
