@@ -31,7 +31,7 @@ export class Setup {
     this.setScene();
     this.setCamera();
     // this.setAmbientLight();
-    this.setDirectionalLight();
+    // this.setDirectionalLight();
     this.setGui();
     this.setHelper();
   }
@@ -50,7 +50,7 @@ export class Setup {
 
   setScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color();
+    this.scene.background = new THREE.Color("#000000");
   }
 
   setCamera() {
@@ -90,10 +90,12 @@ export class Setup {
     const gui = new GUI();
     this.guiValue = {
       range: 0,
+      lineColor: new THREE.Color(0xffffff),
       depthMode: false,
       wireframe: false,
     };
     gui.add(this.guiValue, "range", 0, 1, 0.001);
+    gui.addColor(this.guiValue, "lineColor");
     gui.add(this.guiValue, "depthMode");
     gui.add(this.guiValue, "wireframe");
   }

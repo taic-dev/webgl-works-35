@@ -1,35 +1,36 @@
 import * as THREE from "three";
-import { gsap } from "gsap";
 import { Setup } from "./Setup";
-import fragmentShader from "../../shader/mv/fragmentShader.glsl"
-import vertexShader from "../../shader/mv/vertexShader.glsl"
 import { PARAMS } from "./constants";
 import { getImagePositionAndSize, ImagePositionAndSize } from "../utils/getElementSize";
+import imageFrag from "../../shader/image/fragmentShader.glsl"
+import imageVert from "../../shader/image/vertexShader.glsl"
+import lineFrag from "../../shader/line/fragmentShader.glsl"
+import lineVert from "../../shader/line/vertexShader.glsl"
 import mvTexture from "/assets/images/mv.png";
 import depthTexture from "/assets/images/depth.png";
-import { EASING } from "../utils/constant";
 
 export class Plane {
   setup: Setup
   element: HTMLImageElement | null
   geometry: THREE.BufferGeometry | null
-  mesh: THREE.Mesh | null
+  planeImage: THREE.Mesh | null
+  planeLine: THREE.Mesh | null
   loader: THREE.TextureLoader | null
 
   constructor(setup: Setup) {
     this.setup = setup
     this.element = document.querySelector<HTMLImageElement>('.js-mv-image')
     this.geometry = null
-    this.mesh = null
+    this.planeImage = null
+    this.planeLine = null
     this.loader = this.setup.loader
   }
 
   init() {
     if(!this.element) return
     const info = getImagePositionAndSize(this.element);
-    this.setMesh(info);
-
-    // this.click();
+    this.setPlaneImage(info);
+    this.setPlaneLine(info);
   }
 
   setUniforms(info: ImagePositionAndSize) {
@@ -46,76 +47,76 @@ export class Plane {
       uTextureSize: { value: new THREE.Vector2(info.image.width, info.image.height) },
       uRange: { value: this.setup.guiValue.range },
       uDepthMode: { value: this.setup.guiValue.depthMode },
+      uLineColor: { value: this.setup.guiValue.lineColor },
       ...commonUniforms
     }
   }
 
-  setMesh(info: ImagePositionAndSize) {
+  setPlaneImage(info: ImagePositionAndSize) {
     const uniforms = this.setUniforms(info);
     const geometry = new THREE.PlaneGeometry(1, 1, 100, 100)
     const material = new THREE.ShaderMaterial({
       uniforms: uniforms,
-      fragmentShader: fragmentShader,
-      vertexShader: vertexShader,
-      side: THREE.DoubleSide
+      fragmentShader: imageFrag,
+      vertexShader: imageVert,
+      side: THREE.DoubleSide,
+      transparent: true
     })
 
-    // const material = new THREE.MeshStandardMaterial({
-    //   map: this.loader?.load(mvTexture),
-    //   displacementMap: this.loader?.load(depthTexture),
-    //   displacementScale: 0,
-    //   // alphaMap: this.loader?.load(alphaTexture),
-    //   transparent: true,
-    //   // depthTest: false,
-    //   // wireframe: true
-    // })
-    this.mesh = new THREE.Mesh(geometry, material);
-    this.setup.scene?.add(this.mesh);
+    this.planeImage = new THREE.Mesh(geometry, material);
+    this.setup.scene?.add(this.planeImage);
+    this.planeImage.layers.set(0);
 
-    this.mesh.scale.x = info.dom.width;
-    this.mesh.scale.y = info.dom.height;
-    this.mesh.position.x = info.dom.x;
-    this.mesh.position.y = info.dom.y;
+    this.planeImage.scale.x = info.dom.width;
+    this.planeImage.scale.y = info.dom.height;
+    this.planeImage.position.x = info.dom.x;
+    this.planeImage.position.y = info.dom.y;
+  }
+
+  setPlaneLine(info: ImagePositionAndSize) {
+    if(!this.planeImage) return
+    const uniforms = this.setUniforms(info);
+    const geometry = new THREE.PlaneGeometry(1, 1, 100, 100)
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      fragmentShader: lineFrag,
+      vertexShader: lineVert,
+      side: THREE.DoubleSide,
+      transparent: true
+    })
+
+    this.planeLine = new THREE.Mesh(geometry, material);
+    this.setup.scene?.add(this.planeLine);
+    this.planeLine.layers.set(1);
+
+    this.planeLine.position.copy(this.planeImage.position);
+    this.planeLine.scale.copy(this.planeImage.scale);
   }
 
   updateMesh() {
-    if(!this.mesh || !this.element) return;
-      const info = getImagePositionAndSize(this.element);
-      this.mesh.scale.x = info.dom.width;
-      this.mesh.scale.y = info.dom.height;
-      this.mesh.position.x = info.dom.x;
-      this.mesh.position.y = info.dom.y;
-  }
-
-  click() {
-    const material = (this.mesh!.material as any);
-    let isAnim = false
-    window.addEventListener('click', () => {
-      gsap.to(material, {
-        duration: 0.4,
-        displacementScale: isAnim ? 300 : 0,
-        ease: EASING.OUT_BACK,
-        onComplete: () => {
-          gsap.to(this.mesh!.position, {
-          duration: 0.4,
-          z: isAnim ? -300 : 0,
-          ease: EASING.OUT_BACK,
-          onComplete: () => {
-            isAnim = !isAnim;
-          }
-      })
-        }
-      })      
-      // material.displacementScale = 200
-    })
+    if(!this.planeImage || !this.planeLine || !this.element) return;
+    const info = getImagePositionAndSize(this.element);
+    this.planeImage.scale.x = info.dom.width;
+    this.planeImage.scale.y = info.dom.height;
+    this.planeImage.position.x = info.dom.x;
+    this.planeImage.position.y = info.dom.y;
+    this.planeLine.position.copy(this.planeImage.position);
+    this.planeLine.scale.copy(this.planeImage.scale);
   }
 
   raf() {
-    const material = (this.mesh!.material as any);    
-    material.uniforms.uRange.value = this.setup.guiValue.range;
-    material.uniforms.uDepthMode.value = this.setup.guiValue.depthMode;
-    material.wireframe = this.setup.guiValue.wireframe;
-    material.uniforms.uTime.value += 1;
+    const palneImageMaterial = (this.planeImage!.material as any);    
+    palneImageMaterial.uniforms.uRange.value = this.setup.guiValue.range;
+    palneImageMaterial.uniforms.uDepthMode.value = this.setup.guiValue.depthMode;
+    palneImageMaterial.wireframe = this.setup.guiValue.wireframe;
+    palneImageMaterial.uniforms.uTime.value += 1;
+
+    const palneLineMaterial = (this.planeLine!.material as any);    
+    palneLineMaterial.uniforms.uRange.value = this.setup.guiValue.range;
+    palneLineMaterial.wireframe = this.setup.guiValue.lineColor;
+    palneLineMaterial.uniforms.uDepthMode.value = this.setup.guiValue.depthMode;
+    palneLineMaterial.wireframe = this.setup.guiValue.wireframe;
+    palneLineMaterial.uniforms.uTime.value += 1;
   }
 
   resize() {
