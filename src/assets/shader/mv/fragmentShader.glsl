@@ -2,9 +2,11 @@ uniform float uTime;
 uniform vec2 uPlaneSize;
 uniform sampler2D uColorTexture;
 uniform vec2 uTextureSize;
+uniform float uRange;
 
 varying vec2 vUv;
 varying vec3 vPosition;
+varying float vOver;
 
 void main() {
   // アスペクトを計算
@@ -24,6 +26,12 @@ void main() {
   );
 
   vec4 texture = texture2D(uColorTexture, fixedUv);
+  float lineWidth = 0.05;
+  float lineMask = 1.0 - smoothstep(lineWidth, lineWidth * 0.01, (abs(vUv.x - uRange)));
+  vec4 lineColor = vec4(0.06, 0.83, 0.36, 1.0);
 
-  gl_FragColor = vec4(texture);
+  // uRangeが0か1の時、lineColorをなくす
+  (uRange == 0. || uRange == 1.) ? lineColor = texture : lineColor = lineColor;
+
+  gl_FragColor = mix(lineColor, texture, lineMask);
 }
