@@ -6,7 +6,6 @@ uniform bool uDepthMode;
 
 varying vec2 vUv;
 varying vec3 vPosition;
-varying float vOver;
 
 void main() {
   vUv = uv;
@@ -29,22 +28,12 @@ void main() {
   );
 
   vec4 texture = texture2D(uDepthTexture, fixedUv);
-
   float brightness = dot(texture.rgb, vec3(0.299, 0.587, 0.114));
-
   float height = brightness * 350.;
 
-  float maskX = step(0.001, fixedUv.x) * step(fixedUv.x, 1.);
-  // float maskY = step(0.001, fixedUv.y) * step(fixedUv.y, 1.);
-  // float mask = maskX * maskY;
-
-  height *= maskX;
-
   vec3 pos = position + vec3(0.0, 0.0, height);
-
   float over = step(uRange, fixedUv.x);
-  vOver = over;
-  pos.z *= (1.0 - over);
+  pos.z /= (1.0 - over);
 
   if(uDepthMode) {
     pos.z *= (over - 1.0);

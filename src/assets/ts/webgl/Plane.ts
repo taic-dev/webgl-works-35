@@ -16,6 +16,7 @@ export class Plane {
   planeImage: THREE.Mesh | null
   planeLine: THREE.Mesh | null
   loader: THREE.TextureLoader | null
+  group: THREE.Group;
 
   constructor(setup: Setup) {
     this.setup = setup
@@ -23,6 +24,7 @@ export class Plane {
     this.geometry = null
     this.planeImage = null
     this.planeLine = null
+    this.group = new THREE.Group();
     this.loader = this.setup.loader
   }
 
@@ -60,11 +62,10 @@ export class Plane {
       fragmentShader: imageFrag,
       vertexShader: imageVert,
       side: THREE.DoubleSide,
-      transparent: true
     })
 
     this.planeImage = new THREE.Mesh(geometry, material);
-    this.setup.scene?.add(this.planeImage);
+    this.group.add(this.planeImage)
     this.planeImage.layers.set(0);
 
     this.planeImage.scale.x = info.dom.width;
@@ -82,14 +83,15 @@ export class Plane {
       fragmentShader: lineFrag,
       vertexShader: lineVert,
       side: THREE.DoubleSide,
-      transparent: true
     })
 
     this.planeLine = new THREE.Mesh(geometry, material);
-    this.setup.scene?.add(this.planeLine);
+    this.group.add(this.planeLine)
+    this.setup.scene?.add(this.group);
     this.planeLine.layers.set(1);
 
     this.planeLine.position.copy(this.planeImage.position);
+    this.planeLine.position.z = 1
     this.planeLine.scale.copy(this.planeImage.scale);
   }
 
@@ -105,18 +107,24 @@ export class Plane {
   }
 
   raf() {
-    const palneImageMaterial = (this.planeImage!.material as any);    
-    palneImageMaterial.uniforms.uRange.value = this.setup.guiValue.range;
-    palneImageMaterial.uniforms.uDepthMode.value = this.setup.guiValue.depthMode;
-    palneImageMaterial.wireframe = this.setup.guiValue.wireframe;
-    palneImageMaterial.uniforms.uTime.value += 1;
+    const { guiValue } = this.setup;
+    const palneImageMaterial = (this.planeImage!.material as any);
+    const palneLineMaterial = (this.planeLine!.material as any);
 
-    const palneLineMaterial = (this.planeLine!.material as any);    
-    palneLineMaterial.uniforms.uRange.value = this.setup.guiValue.range;
-    palneLineMaterial.wireframe = this.setup.guiValue.lineColor;
-    palneLineMaterial.uniforms.uDepthMode.value = this.setup.guiValue.depthMode;
-    palneLineMaterial.wireframe = this.setup.guiValue.wireframe;
+    palneImageMaterial.uniforms.uRange.value = guiValue.range;
+    palneImageMaterial.uniforms.uDepthMode.value = guiValue.depthMode;
+    palneImageMaterial.wireframe = guiValue.wireframe;
+    palneImageMaterial.uniforms.uTime.value += 1;
+  
+    palneLineMaterial.uniforms.uRange.value = guiValue.range;
+    palneLineMaterial.wireframe = guiValue.lineColor;
+    palneLineMaterial.uniforms.uDepthMode.value = guiValue.depthMode;
+    palneLineMaterial.wireframe = guiValue.wireframe;
     palneLineMaterial.uniforms.uTime.value += 1;
+
+    if(guiValue.rotation) {
+      this.group.rotation.y += 0.001
+    }
   }
 
   resize() {

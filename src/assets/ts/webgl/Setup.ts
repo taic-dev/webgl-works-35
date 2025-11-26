@@ -92,11 +92,13 @@ export class Setup {
       range: 0,
       lineColor: new THREE.Color(0xffffff),
       depthMode: false,
+      rotation: false,
       wireframe: false,
     };
     gui.add(this.guiValue, "range", 0, 1, 0.001);
     gui.addColor(this.guiValue, "lineColor");
     gui.add(this.guiValue, "depthMode");
+    gui.add(this.guiValue, "rotation");
     gui.add(this.guiValue, "wireframe");
   }
 
