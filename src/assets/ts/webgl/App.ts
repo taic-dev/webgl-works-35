@@ -1,19 +1,23 @@
 import { BloomEffect } from "./BloomEffect";
 import { Plane } from "./Plane";
 import { Setup } from "./Setup";
+import { Stage } from "./Stage";
 
 export class App {
   setup: Setup
+  stage: Stage
   plane: Plane
   bloomEffect: BloomEffect
 
   constructor() {
     this.setup = new Setup();
+    this.stage = new Stage(this.setup);
     this.plane = new Plane(this.setup);
     this.bloomEffect = new BloomEffect(this.setup);
   }
 
   init() {
+    // this.stage.init();
     this.plane.init();
     this.bloomEffect.init();
   }

@@ -4,6 +4,8 @@ import { PARAMS } from "./constants";
 import { getImagePositionAndSize, ImagePositionAndSize } from "../utils/getElementSize";
 import imageFrag from "../../shader/image/fragmentShader.glsl"
 import imageVert from "../../shader/image/vertexShader.glsl"
+import imageBackFrag from "../../shader/imageBack/fragmentShader.glsl"
+import imageBackVert from "../../shader/imageBack/vertexShader.glsl"
 import lineFrag from "../../shader/line/fragmentShader.glsl"
 import lineVert from "../../shader/line/vertexShader.glsl"
 import mvTexture from "/assets/images/mv.png";
@@ -14,6 +16,7 @@ export class Plane {
   element: HTMLImageElement | null
   geometry: THREE.BufferGeometry | null
   planeImage: THREE.Mesh | null
+  planeBackImage: THREE.Mesh | null
   planeLine: THREE.Mesh | null
   loader: THREE.TextureLoader | null
   group: THREE.Group;
@@ -23,6 +26,7 @@ export class Plane {
     this.element = document.querySelector<HTMLImageElement>('.js-mv-image')
     this.geometry = null
     this.planeImage = null
+    this.planeBackImage = null
     this.planeLine = null
     this.group = new THREE.Group();
     this.loader = this.setup.loader
@@ -32,6 +36,7 @@ export class Plane {
     if(!this.element) return
     const info = getImagePositionAndSize(this.element);
     this.setPlaneImage(info);
+    this.setPlaneBackImage(info);
     this.setPlaneLine(info);
   }
 
@@ -74,6 +79,26 @@ export class Plane {
     this.planeImage.position.y = info.dom.y;
   }
 
+  setPlaneBackImage(info: ImagePositionAndSize) {
+    const uniforms = this.setUniforms(info);
+    const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      fragmentShader: imageBackFrag,
+      vertexShader: imageBackVert,
+      side: THREE.DoubleSide,
+    })
+
+    this.planeBackImage = new THREE.Mesh(geometry, material);
+    this.group.add(this.planeBackImage)
+    this.planeBackImage.layers.set(0);
+
+    this.planeBackImage.scale.x = info.dom.width;
+    this.planeBackImage.scale.y = info.dom.height;
+    this.planeBackImage.position.x = info.dom.x;
+    this.planeBackImage.position.y = info.dom.y;
+  }
+
   setPlaneLine(info: ImagePositionAndSize) {
     if(!this.planeImage) return
     const uniforms = this.setUniforms(info);
@@ -82,7 +107,6 @@ export class Plane {
       uniforms: uniforms,
       fragmentShader: lineFrag,
       vertexShader: lineVert,
-      side: THREE.DoubleSide,
     })
 
     this.planeLine = new THREE.Mesh(geometry, material);
