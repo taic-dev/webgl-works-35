@@ -17,7 +17,7 @@ export class App {
   }
 
   init() {
-    // this.stage.init();
+    this.stage.init();
     this.plane.init();
     this.bloomEffect.init();
   }
@@ -36,5 +36,11 @@ export class App {
   resize() {
     this.setup.resize();
     this.plane.resize();
+
+    const BREAK_POINT = 768
+    window.matchMedia(`(min-width: ${BREAK_POINT}px)`).addEventListener('change', () => {
+      window.location.reload();
+      window.isSp = window.innerWidth < BREAK_POINT
+    });
   }
 }

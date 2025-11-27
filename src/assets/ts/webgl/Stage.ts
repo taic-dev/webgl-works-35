@@ -15,10 +15,15 @@ export class Stage {
   setMesh() {
     const size = Math.max(1500, window.innerWidth);
     const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(size, size),
-      new THREE.MeshPhongMaterial({color: 0xcbcbcb, depthWrite: false})
+      new THREE.SphereGeometry( size, 32, 16 ),
+      new THREE.MeshPhongMaterial({
+        color: 0xED1A3D,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        wireframe: true
+      })
     );
-    mesh.rotation.x = -Math.PI / 2;
     this.setup.scene?.add(mesh);
+    mesh.layers.set(0);
   }
 }

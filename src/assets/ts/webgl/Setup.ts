@@ -30,15 +30,15 @@ export class Setup {
     this.setRenderer();
     this.setScene();
     this.setCamera();
-    // this.setAmbientLight();
-    // this.setDirectionalLight();
+    this.setAmbientLight();
+    this.setDirectionalLight();
     this.setGui();
     this.setHelper();
   }
 
   setRenderer() {
     const element = document.querySelector('.webgl');
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setSize(PARAMS.WINDOW.W, PARAMS.WINDOW.H);
     element?.appendChild(this.renderer.domElement);
   }
@@ -75,6 +75,7 @@ export class Setup {
     const fovRad = (PARAMS.CAMERA.FOV / 2) * (Math.PI / 180);
     const dist = window.innerHeight / 2 / Math.tan(fovRad);
     this.camera.position.set(0, 100, dist);
+    this.camera.lookAt(0, 0, 0);
   }
 
   setDirectionalLight() {
@@ -111,10 +112,12 @@ export class Setup {
     this.controls = new OrbitControls(this.camera, this.renderer?.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.2;
+    this.controls.minDistance = this.camera.position.z - 300;
+    this.controls.maxDistance = this.camera.position.z + 300;
 
     // AxesHelper
-    const axesHelper = new THREE.AxesHelper(2000);
-    this.scene?.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(2000);
+    // this.scene?.add(axesHelper);
   }
 
   resize() {

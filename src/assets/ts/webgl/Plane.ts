@@ -97,6 +97,7 @@ export class Plane {
     this.planeBackImage.scale.y = info.dom.height;
     this.planeBackImage.position.x = info.dom.x;
     this.planeBackImage.position.y = info.dom.y;
+    this.planeBackImage.position.z = -1;
   }
 
   setPlaneLine(info: ImagePositionAndSize) {
@@ -120,12 +121,17 @@ export class Plane {
   }
 
   updateMesh() {
-    if(!this.planeImage || !this.planeLine || !this.element) return;
+    if(!this.planeImage || !this.planeBackImage || !this.planeLine || !this.element) return;
     const info = getImagePositionAndSize(this.element);
     this.planeImage.scale.x = info.dom.width;
     this.planeImage.scale.y = info.dom.height;
     this.planeImage.position.x = info.dom.x;
     this.planeImage.position.y = info.dom.y;
+
+    this.planeBackImage.position.copy(this.planeImage.position);
+    this.planeBackImage.position.z = -1;
+    this.planeBackImage.scale.copy(this.planeImage.scale);
+
     this.planeLine.position.copy(this.planeImage.position);
     this.planeLine.scale.copy(this.planeImage.scale);
   }
@@ -133,12 +139,15 @@ export class Plane {
   raf() {
     const { guiValue } = this.setup;
     const palneImageMaterial = (this.planeImage!.material as any);
+    const palneBackImageMaterial = (this.planeBackImage!.material as any);
     const palneLineMaterial = (this.planeLine!.material as any);
 
     palneImageMaterial.uniforms.uRange.value = guiValue.range;
     palneImageMaterial.uniforms.uDepthMode.value = guiValue.depthMode;
     palneImageMaterial.wireframe = guiValue.wireframe;
     palneImageMaterial.uniforms.uTime.value += 1;
+
+    palneBackImageMaterial.wireframe = guiValue.wireframe;
   
     palneLineMaterial.uniforms.uRange.value = guiValue.range;
     palneLineMaterial.wireframe = guiValue.lineColor;
