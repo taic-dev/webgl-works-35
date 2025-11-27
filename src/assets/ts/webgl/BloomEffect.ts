@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 // @ts-ignore
-import { FXAAPass } from 'three/addons/postprocessing/FXAAPass.js';
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Setup } from "./Setup";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -14,7 +14,7 @@ export class BloomEffect {
   setup: Setup;
   renderPassBloom: RenderPass | null;
   renderPassBase: RenderPass | null;
-  fxaaPass: FXAAPass
+  smaaPass: SMAAPass | null
   unrealBloomPass: UnrealBloomPass | null
   outPass: OutputPass;
   shaderPass: ShaderPass | null;
@@ -25,7 +25,7 @@ export class BloomEffect {
     this.setup = setup;
     this.renderPassBloom = null;
     this.renderPassBase = null;
-    this.fxaaPass = new FXAAPass();
+    this.smaaPass = null;
     this.unrealBloomPass = null;
     this.outPass = new OutputPass();
     this.shaderPass = null;
@@ -48,6 +48,12 @@ export class BloomEffect {
     this.effectComposer2 = new EffectComposer(renderer!);
     this.shaderPass = new ShaderPass(new THREE.ShaderMaterial(this.setMaterial()));
 
+    const pixelRatio = renderer!.getPixelRatio();
+    const width = window.innerWidth * pixelRatio;
+    const height = window.innerHeight * pixelRatio;
+    this.smaaPass = new SMAAPass(width, height);
+
+
     this.effectComposer1.addPass(this.renderPassBloom);
     this.effectComposer1.addPass(this.unrealBloomPass);
     this.effectComposer1.addPass(this.outPass);
@@ -55,7 +61,7 @@ export class BloomEffect {
     
     this.effectComposer2.addPass(this.renderPassBase);
     this.effectComposer2.addPass(this.shaderPass);
-    this.effectComposer2.addPass(this.fxaaPass);
+    this.effectComposer2.addPass(this.smaaPass);
   }
 
   setMaterial() {
