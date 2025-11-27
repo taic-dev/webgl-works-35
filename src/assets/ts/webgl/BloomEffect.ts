@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 // @ts-ignore
-import { FXAAPass } from 'three/examples/jsm/postprocessing/FXAAPass.js';
+import { FXAAPass } from 'three/examples/jsm/postprocessing/FXAAPass';
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Setup } from "./Setup";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
