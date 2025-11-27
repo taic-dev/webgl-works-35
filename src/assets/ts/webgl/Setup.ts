@@ -30,8 +30,8 @@ export class Setup {
     this.setRenderer();
     this.setScene();
     this.setCamera();
-    // this.setAmbientLight();
-    // this.setDirectionalLight();
+    this.setAmbientLight();
+    this.setDirectionalLight();
     this.setGui();
     this.setHelper();
   }
@@ -50,7 +50,8 @@ export class Setup {
 
   setScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color("#000000");
+    // this.scene.background = new THREE.Color(0xa0a0a0);
+    // this.scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
   }
 
   setCamera() {
@@ -63,7 +64,8 @@ export class Setup {
     const fovRad = (PARAMS.CAMERA.FOV / 2) * (Math.PI / 180);
     const dist = window.innerHeight / 2 / Math.tan(fovRad);
 
-    this.camera.position.set(0, 0, dist);
+    this.camera.position.set(0, 100, dist);
+    this.camera.lookAt(0, 0, 0);
   }
 
   updateCamera() {
@@ -72,7 +74,8 @@ export class Setup {
     this.camera?.updateProjectionMatrix();
     const fovRad = (PARAMS.CAMERA.FOV / 2) * (Math.PI / 180);
     const dist = window.innerHeight / 2 / Math.tan(fovRad);
-    this.camera.position.set(0, 0, dist);
+    this.camera.position.set(0, 100, dist);
+    this.camera.lookAt(0, 0, 0);
   }
 
   setDirectionalLight() {
@@ -92,11 +95,13 @@ export class Setup {
       range: 0,
       lineColor: new THREE.Color(0xffffff),
       depthMode: false,
+      rotation: false,
       wireframe: false,
     };
     gui.add(this.guiValue, "range", 0, 1, 0.001);
     gui.addColor(this.guiValue, "lineColor");
     gui.add(this.guiValue, "depthMode");
+    gui.add(this.guiValue, "rotation");
     gui.add(this.guiValue, "wireframe");
   }
 
@@ -107,10 +112,12 @@ export class Setup {
     this.controls = new OrbitControls(this.camera, this.renderer?.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.2;
+    this.controls.minDistance = this.camera.position.z - 300;
+    this.controls.maxDistance = this.camera.position.z + 300;
 
     // AxesHelper
-    const axesHelper = new THREE.AxesHelper(2000);
-    this.scene?.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(2000);
+    // this.scene?.add(axesHelper);
   }
 
   resize() {

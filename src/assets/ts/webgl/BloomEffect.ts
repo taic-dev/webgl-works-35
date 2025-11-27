@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+// @ts-ignore
+import { FXAAPass } from 'three/examples/jsm/postprocessing/FXAAPass.js';
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Setup } from "./Setup";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -12,6 +14,7 @@ export class BloomEffect {
   setup: Setup;
   renderPassBloom: RenderPass | null;
   renderPassBase: RenderPass | null;
+  fxaaPass: FXAAPass
   unrealBloomPass: UnrealBloomPass | null
   outPass: OutputPass;
   shaderPass: ShaderPass | null;
@@ -22,6 +25,7 @@ export class BloomEffect {
     this.setup = setup;
     this.renderPassBloom = null;
     this.renderPassBase = null;
+    this.fxaaPass = new FXAAPass();
     this.unrealBloomPass = null;
     this.outPass = new OutputPass();
     this.shaderPass = null;
@@ -39,7 +43,6 @@ export class BloomEffect {
     this.renderPassBloom = new RenderPass(scene!, camera!);
     this.renderPassBase = new RenderPass(scene!, camera!);
 
-
     this.unrealBloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerHeight * scale, window.innerWidth * scale), 0.3, radius, 0.2);
     this.effectComposer1 = new EffectComposer(renderer!);
     this.effectComposer2 = new EffectComposer(renderer!);
@@ -52,6 +55,7 @@ export class BloomEffect {
     
     this.effectComposer2.addPass(this.renderPassBase);
     this.effectComposer2.addPass(this.shaderPass);
+    this.effectComposer2.addPass(this.fxaaPass);
   }
 
   setMaterial() {
@@ -85,7 +89,5 @@ export class BloomEffect {
     renderer!.clearDepth();
     camera!.layers.set(0);
     this.effectComposer2?.render();
-
-
   }
 }

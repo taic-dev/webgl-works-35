@@ -1,17 +1,11 @@
 uniform vec2 uPlaneSize;
-uniform sampler2D uDepthTexture;
+uniform sampler2D uColorTexture;
 uniform vec2 uTextureSize;
-uniform float uRange;
-uniform bool uDepthMode;
 
 varying vec2 vUv;
-varying vec3 vPosition;
 
 void main() {
-  vUv = uv;
-  vPosition = position;
-
-    // アスペクトを計算
+  // アスペクトを計算
   float planeAspect = uPlaneSize.x / uPlaneSize.y;
   float textureAspect = uTextureSize.x / uTextureSize.y;
 
@@ -27,17 +21,7 @@ void main() {
     (vUv.y - 0.5) * ratio.y + 0.5
   );
 
-  vec4 texture = texture2D(uDepthTexture, fixedUv);
-  float brightness = dot(texture.rgb, vec3(0.299, 0.587, 0.114));
-  float height = brightness * 350.;
+  vec4 texture = texture2D(uColorTexture, fixedUv);
 
-  vec3 pos = position + vec3(0.0, 0.0, height);
-  float over = step(uRange, fixedUv.x);
-  pos.z /= (1.0 - over);
-
-  if(uDepthMode) {
-    pos.z *= (over - 1.0);
-  }
-
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+  gl_FragColor = texture;
 }
