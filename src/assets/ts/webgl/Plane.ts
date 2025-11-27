@@ -8,8 +8,8 @@ import imageBackFrag from "../../shader/imageBack/fragmentShader.glsl"
 import imageBackVert from "../../shader/imageBack/vertexShader.glsl"
 import lineFrag from "../../shader/line/fragmentShader.glsl"
 import lineVert from "../../shader/line/vertexShader.glsl"
-import mvTexture from "/assets/images/mv.png";
-import depthTexture from "/assets/images/depth.png";
+import mvTexture from "/assets/images/mv.webp";
+import depthTexture from "/assets/images/depth.webp";
 
 export class Plane {
   setup: Setup
@@ -97,7 +97,7 @@ export class Plane {
     this.planeBackImage.scale.y = info.dom.height;
     this.planeBackImage.position.x = info.dom.x;
     this.planeBackImage.position.y = info.dom.y;
-    this.planeBackImage.position.z = -1;
+    this.planeBackImage.position.z = -0.01;
   }
 
   setPlaneLine(info: ImagePositionAndSize) {

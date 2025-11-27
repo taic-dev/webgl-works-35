@@ -1,6 +1,8 @@
-# Three.js Development Template: three-starter
+# webgl-works-35 2D→3D
 
-A modern starter template for creating Three.js projects using TypeScript and Vite. This template is designed to streamline the setup process, so you can focus on developing your 3D applications.
+<img src="./public/assets/images/screenshot.png" />
+
+[https://taic-dev.github.io/webgl-works-35](https://taic-dev.github.io/webgl-works-35)
 
 ## Features
 
@@ -8,25 +10,14 @@ A modern starter template for creating Three.js projects using TypeScript and Vi
 - **TypeScript**: Write maintainable and type-safe code.
 - **Vite**: Enjoy blazing-fast development and build tools.
 - **GLSL Support**: Write and bundle shader code seamlessly using `vite-plugin-glslify`.
-- **GLTF Loading**: Easily load 3D models with `vite-plugin-gltf`.
-- **GSAP Integration**: Create smooth animations.
 
 ## Getting Started
 
-### Prerequisites
-
-Ensure you have the following installed on your machine:
-
-- [Node.js](https://nodejs.org/) (version 16 or higher)
-- npm or yarn package manager
-
-### Installation
-
 1. Clone the repository:
   ```bash
-  git clone https://github.com/yourusername/three-starter.git
+  git clone git@github.com:taic-dev/webgl-works-35.git
 
-  cd three-starter
+  cd webgl-works-35
   ```
 2. Install dependencies:
   ```
