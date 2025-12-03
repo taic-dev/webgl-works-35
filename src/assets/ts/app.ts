@@ -1,14 +1,17 @@
 import { gsap } from "gsap"
 import { App } from "./webgl/App";
 
-const webgl = new App();
-webgl.init();
-gsap.ticker.add(() => webgl.render());
+window.addEventListener("DOMContentLoaded", () => {
+  const webgl = new App();
 
-window.addEventListener('scroll', () => {
-  webgl.update()
-})
+  webgl.init();
+  gsap.ticker.add(() => webgl.render());
 
-window.addEventListener('resize', () => {
-  webgl.resize()
+  window.addEventListener('scroll', () => {
+    webgl.update()
+  })
+
+  window.addEventListener('resize', () => {
+    webgl.resize()
+  })
 })
